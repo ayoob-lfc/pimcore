@@ -24,7 +24,7 @@ use Pimcore\Model;
 use Pimcore\Model\DataObject\ClassDefinition\Data;
 use Pimcore\Model\DataObject\QuantityValue\UnitConversionService;
 
-class QuantityValue extends Data implements ResourcePersistenceAwareInterface, QueryResourcePersistenceAwareInterface
+class QuantityValue extends Data implements ResourcePersistenceAwareInterface, QueryResourcePersistenceAwareInterface, TypeDeclarationSupportInterface, EqualComparisonInterface
 {
     use Extension\ColumnType;
     use Extension\QueryColumnType;
@@ -260,7 +260,7 @@ class QuantityValue extends Data implements ResourcePersistenceAwareInterface, Q
             $quantityValue = new Model\DataObject\Data\QuantityValue((float)$data[$this->getName() . '__value'], $data[$this->getName() . '__unit']);
 
             if (isset($params['owner'])) {
-                $quantityValue->setOwner($params['owner'], $params['fieldname'], $params['language']);
+                $quantityValue->setOwner($params['owner'], $params['fieldname'], $params['language'] ?? null);
             }
 
             return $quantityValue;
@@ -732,7 +732,7 @@ class QuantityValue extends Data implements ResourcePersistenceAwareInterface, Q
      *
      * @return bool
      */
-    public function isEqual($oldValue, $newValue)
+    public function isEqual($oldValue, $newValue): bool
     {
         if ($oldValue === null && $newValue === null) {
             return true;
